@@ -1,10 +1,21 @@
+import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-export default function Home() {
+import { getSortedPosts } from '../lib/posts';
+
+export const getStaticProps: GetStaticProps = async () => {
+  const allPostData = getSortedPosts();
+
+  return {
+    props: { allPostData },
+  };
+};
+
+export default function Home({ allPostData }: { allPostData: any[] }) {
   return (
     <div className="container">
       <Head>
-        <title>Nice</title>
+        <title>tutorial</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -18,7 +29,6 @@ export default function Home() {
         </p>
 
         <div className="grid">
-
           <Link href="my-page">
             <a className="card">
               <h3>My page! &rarr;</h3>
@@ -26,6 +36,22 @@ export default function Home() {
             </a>
           </Link>
         </div>
+        <section>
+          <h2>Blog</h2>
+          <ul>
+            {allPostData.map(({ id, title, date }) => {
+              return (
+                <li key={id}>
+                  <Link href={`/posts/${id}`}>{title}</Link>
+                  <br />
+                  {id}
+                  <br />
+                  {date}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
       </main>
 
       <footer>
@@ -33,8 +59,7 @@ export default function Home() {
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
-        >
-        </a>
+        ></a>
       </footer>
 
       <style jsx>{`
